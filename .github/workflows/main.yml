@@ -1,0 +1,22 @@
+name: WorkFlow BUILD & DEPLOY
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copiamos los archivos del repositorio
+        uses: actions/checkout@v4.2.2
+        
+      - name: Instalar .Net
+        uses: actions/setup-dotnet@v3.4.2
+        with: 
+          dotnet-version: 8.0.x
+
+      - name: Instalando las dependencias del proyecto asp.net
+        run: dotnet restore
+
+      - name: Compilar aplicacion web
+        run: dotnet build --no-restore
