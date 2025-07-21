@@ -3,16 +3,16 @@ name: WorkFlow BUILD & DEPLOY
 on:
   workflow_dispatch:
   push:
-   paths: # se ejectuaran los jobs cuando haya cambios en los siguientes proyectos y archivos.
-    - '.github/workflows/main.yml'
-    - 'GithubActionsDemoApp/**'
-    - 'Pruebas/**'
-   branches: #los push se ejecutaran cuando se hagan a la rama main
-    - main
+    paths: # se ejectuaran los jobs cuando haya cambios en los siguientes proyectos y archivos.
+      - '.github/workflows/main.yml'
+      - 'GithubActionsDemoApp/**'
+      - 'Pruebas/**'
+    branches: #los push se ejecutaran cuando se hagan a la rama main
+      - main
 
 jobs:
   env:
-   project: GithubActionsDemoApp/GithubActionsDemoApp.csproj
+    project: GithubActionsDemoApp/GithubActionsDemoApp.csproj
   build:
     runs-on: ubuntu-latest
     steps:
