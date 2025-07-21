@@ -12,6 +12,11 @@ namespace GithubActionsDemoApp.Controllers
         public PersonasController(ApplicationDbContext context)
         {
             this.context = context;
+
+            Console.WriteLine("Trabajando con GitHub Actions");
+
+            Console.WriteLine("leomarqz or ::crack::night::");
+
         }
 
         [HttpGet]
