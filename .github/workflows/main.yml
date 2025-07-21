@@ -27,3 +27,6 @@ jobs:
 
       - name: Compilar aplicacion web
         run: dotnet build --no-restore
+      
+      - name: Ejecutar pruebas unitarias
+        run: dotnet test --no-build --verbosity normal
