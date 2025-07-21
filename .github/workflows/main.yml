@@ -9,6 +9,8 @@ on:
       - 'Pruebas/**'
     branches: #los push se ejecutaran cuando se hagan a la rama main
       - main
+    tags:
+      - '*' # se ejecutara cuando se haga un push a una etiqueta (tag)
 
 jobs:
   build:
@@ -45,11 +47,11 @@ jobs:
           path: ./myapp
 
       - name: Crear Zip de artefactos
+        if: startswith(github.ref, 'refs/tags/') # Solo se ejecuta si el push es a una etiqueta (tag)
         run: zip -r myapp.zip ./myapp
 
       - name: Creando Release (GH Release)
-        # You may pin to the exact commit or the version.
-        # uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8
+        if: startswith(github.ref, 'refs/tags/') # Solo se ejecuta si el push es a una etiqueta (tag)
         uses: softprops/action-gh-release@v2.3.2
         with:
           tag_name: v1.0.0
