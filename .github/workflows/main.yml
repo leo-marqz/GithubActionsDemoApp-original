@@ -54,9 +54,8 @@ jobs:
         if: startswith(github.ref, 'refs/tags/') # Solo se ejecuta si el push es a una etiqueta (tag)
         uses: softprops/action-gh-release@v2.3.2
         with:
-          tag_name: v1.0.0
+          tag_name: ${{ github.ref_name }} # Nombre de la etiqueta (tag)
           body: |
-            This is the release of version 1.0.0 of the application.
+            This is the release of version ${{ github.ref_name }} of the application.
             It includes all the features and fixes up to this point.
-          release_name: Release v1.0.0
           files: myapp.zip
