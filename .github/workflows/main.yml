@@ -13,8 +13,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permite escribir en el repositorio
     env:
-        project: GithubActionsDemoApp/GithubActionsDemoApp.csproj
+      project: GithubActionsDemoApp/GithubActionsDemoApp.csproj
     steps:
       - name: Copiamos los archivos del repositorio
         uses: actions/checkout@v4.2.2
@@ -41,3 +43,18 @@ jobs:
         with:
           name: apiartifact
           path: ./myapp
+
+      - name: Crear Zip de artefactos
+        run: zip -r myapp.zip ./myapp
+
+      - name: Creando Release (GH Release)
+        # You may pin to the exact commit or the version.
+        # uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8
+        uses: softprops/action-gh-release@v2.3.2
+        with:
+          tag_name: v1.0.0
+          body: |
+            This is the release of version 1.0.0 of the application.
+            It includes all the features and fixes up to this point.
+          release_name: Release v1.0.0
+          files: myapp.zip
