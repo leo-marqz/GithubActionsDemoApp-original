@@ -11,10 +11,10 @@ on:
       - main
 
 jobs:
-  env:
-    project: GithubActionsDemoApp/GithubActionsDemoApp.csproj
   build:
     runs-on: ubuntu-latest
+    env:
+        project: GithubActionsDemoApp/GithubActionsDemoApp.csproj
     steps:
       - name: Copiamos los archivos del repositorio
         uses: actions/checkout@v4.2.2
