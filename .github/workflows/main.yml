@@ -7,7 +7,7 @@ on:
     - '.github/workflows/main.yml'
     - 'GithubActionsDemoApp/**'
     - 'Pruebas/**'
-   branches:
+   branches: #los push se ejecutaran cuando se hagan a la rama main
     - main
 
 jobs:
