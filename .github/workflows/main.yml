@@ -2,6 +2,13 @@ name: WorkFlow BUILD & DEPLOY
 
 on:
   workflow_dispatch:
+  push:
+   paths: # se ejectuaran los jobs cuando haya cambios en los siguientes proyectos y archivos.
+    - '.github/workflows/main.yml'
+    - 'GithubActionsDemoApp/**'
+    - 'Pruebas/**'
+   branches:
+    - main
 
 jobs:
   build:
