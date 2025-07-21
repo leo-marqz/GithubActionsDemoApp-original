@@ -11,6 +11,8 @@ on:
     - main
 
 jobs:
+  env:
+   project: GithubActionsDemoApp/GithubActionsDemoApp.csproj
   build:
     runs-on: ubuntu-latest
     steps:
@@ -30,3 +32,12 @@ jobs:
       
       - name: Ejecutar pruebas unitarias
         run: dotnet test --no-build --verbosity normal
+
+      - name: Publicar aplicacion web
+        run: dotnet publish ${{ env.project }} -c Release -o myapp --runtime win-x86 #win-x64
+      
+      - name: Subir artefactos
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: apiartifact
+          path: ./myapp
