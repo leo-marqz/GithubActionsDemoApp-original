@@ -12,6 +12,12 @@ on:
     tags:
       - '*' # se ejecutara cuando se haga un push a una etiqueta (tag)
 
+env:
+    AZURE_APP_SERVICE_NAME: ap-githubactions-webapp
+    AZURE_APP_SERVICE_PACKAGE: '.' #Indica que los paquetes estaran en el mismo sitio o ruta donde se esta ejecutando este workflow
+    DOTNET_VERSION: '8'
+    #AZURE_PUBLIC_PROFILE
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,7 +32,7 @@ jobs:
       - name: Instalar .Net
         uses: actions/setup-dotnet@v3.4.2
         with: 
-          dotnet-version: 8.0.x
+          dotnet-version: ${{ env.DOTNET_VERSION }} # Instala la version de .Net especificada en la variable de entorno DOTNET_VERSION
 
       - name: Instalando las dependencias del proyecto asp.net
         run: dotnet restore
@@ -59,3 +65,22 @@ jobs:
             This is the release of version ${{ github.ref_name }} of the application.
             It includes all the features and fixes up to this point.
           files: myapp.zip
+  
+  deploy:
+    permissions:
+      contents: none # No se permite escribir en el repositorio
+    runs-on: ubuntu-latest
+    needs: build # Este job depende del job build
+    steps:
+      - name: Descargar artefactos
+        uses: actions/download-artifact@v4.2.2
+        with:
+          name: apiartifact
+      
+      - name: Azure WebApp
+        uses: Azure/webapps-deploy@v3.0.5
+        with:
+          app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLIC_PROFILE }} 
+          package: ${{ env.AZURE_APP_SERVICE_PACKAGE }}
+          slot-name: production # Nombre del slot de producción
