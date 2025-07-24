@@ -78,7 +78,7 @@ jobs:
           name: apiartifact
       
       - name: Azure WebApp
-        uses: Azure/webapps-deploy@v3.0.5
+        uses: Azure/webapps-deploy@v3.0.4
         with:
           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
           publish-profile: ${{ secrets.AZURE_PUBLIC_PROFILE }} 
