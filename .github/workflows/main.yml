@@ -34,6 +34,10 @@ jobs:
         with: 
           dotnet-version: ${{ env.DOTNET_VERSION }} # Instala la version de .Net especificada en la variable de entorno DOTNET_VERSION
 
+      - name: Instalar EF Core CLI
+        run: dotnet tool install --global dotnet-ef
+        
+
       - name: Instalando las dependencias del proyecto asp.net
         run: dotnet restore
 
@@ -45,12 +49,21 @@ jobs:
 
       - name: Publicar aplicacion web
         run: dotnet publish ${{ env.project }} -c Release -o myapp --runtime win-x86 #win-x64
+
+      - name: Generar Scripts de Migraciones
+        run: dotnet ef migrations script -i -o migrations.sql --project $project
       
-      - name: Subir artefactos
+      - name: Subir artefactos #Upload a Build Artifact
         uses: actions/upload-artifact@v4.6.2
         with:
           name: apiartifact
           path: ./myapp
+
+      - name: Subir migraciones
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: migrations
+          path: migrations.sql
 
       - name: Crear Zip de artefactos
         if: startswith(github.ref, 'refs/tags/') # Solo se ejecuta si el push es a una etiqueta (tag)
@@ -76,6 +89,11 @@ jobs:
         uses: actions/download-artifact@v4.3.0
         with:
           name: apiartifact
+
+      - name: Descargar Migraciones #Download a Build Artifact
+        uses: actions/download-artifact@v4.3.0
+        with:
+          name: migrations
       
       - name: Azure WebApp
         uses: Azure/webapps-deploy@v3.0.5
@@ -84,3 +102,9 @@ jobs:
           publish-profile: ${{ secrets.AZURE_PUBLIC_PROFILE }} 
           package: ${{ env.AZURE_APP_SERVICE_PACKAGE }}
           slot-name: production # Nombre del slot de producción
+      
+      - name: Azure SQL Deploy
+        uses: Azure/sql-action@v2.2.1
+        with:
+          connection-string: ${{ secrets.CONNECTION_STRING }}
+          path: ./migrations.sql
